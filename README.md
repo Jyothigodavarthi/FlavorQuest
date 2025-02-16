@@ -1,222 +1,191 @@
-FlavorQuest Database
+# FlavorQuest Database
 
-Description:
+## Description
 FlavorQuest is an innovative culinary database designed to celebrate the art of food. This project transforms the way food lovers, chefs, and home cooks interact with recipes and ingredients, creating an engaging platform to explore the world of flavors.
 
-Key Features of FlavorQuest:
+## Key Features of FlavorQuest
 
-Recipe Management:
+### Recipe Management
+- Add, update, and delete recipes with detailed ingredient lists and preparation steps.
 
-The core functionality of adding, updating, and deleting recipes with detailed ingredient lists and preparation steps. This feature is essential for any culinary database.
+### Categorized Food Items
+- Organize food items into various categories (e.g., appetizers, main courses, desserts) for easier navigation.
 
-Categorized Food Items:
+### Customer Preferences
+- Manage customer information, including food preferences and dietary restrictions, to enable personalized recommendations.
 
-Organizing food items into various categories (e.g., appetizers, main courses, desserts) allows for easier navigation and search, making it user-friendly.
+### Advanced Search Functionality
+- Implement complex querying options to find recipes or food items based on various criteria (like ingredients or cooking time).
 
-Customer Preferences:
+### Nutritional Information
+- Include nutritional details to help users make informed dietary choices.
 
-Managing customer information, including their food preferences and dietary restrictions, enables personalized recipe recommendations and enhances user engagement.
+## Technologies Used
+- SQL
 
-Advanced Search Functionality:
+## Database Structure
 
-Implementing complex querying options to find specific recipes or food items based on various criteria (like ingredients or cooking time) improves usability and efficiency.
+### Tables
 
-Nutritional Information:
+#### `CATEGORIES` Table
+```sql
+CREATE TABLE CATEGORIES (
+    CATEGORY_ID INT PRIMARY KEY,
+    CATEGORY_NAME VARCHAR(100) NOT NULL,
+    DESCRIPTION TEXT
+);
+```
 
-Including nutritional information for recipes helps users make informed dietary choices and caters to health-conscious individuals.
+#### `FOOD_ITEMS` Table
+```sql
+CREATE TABLE FOOD_ITEMS (
+    FOOD_ID INT PRIMARY KEY,
+    FOOD_NAME VARCHAR(255) NOT NULL,
+    DESCRIPTION TEXT,
+    PRICE DECIMAL(10,2),
+    CATEGORY_ID INT,
+    FOREIGN KEY (CATEGORY_ID) REFERENCES CATEGORIES(CATEGORY_ID)
+);
+```
 
-Technologies Used:
+#### `CUSTOMERS` Table
+```sql
+CREATE TABLE CUSTOMERS (
+    CUSTOMER_ID INT PRIMARY KEY,
+    NAME VARCHAR(255) NOT NULL,
+    EMAIL VARCHAR(255) UNIQUE NOT NULL,
+    PHONE VARCHAR(15) NOT NULL
+);
+```
 
-SQL
+#### `ORDERS` Table
+```sql
+CREATE TABLE ORDERS (
+    ORDER_ID INT PRIMARY KEY,
+    CUSTOMER_NAME VARCHAR(255) NOT NULL,
+    CUSTOMER_PHONE VARCHAR(15) NOT NULL,
+    ORDER_DATE DATE DEFAULT CURRENT_DATE,
+    TOTAL_AMOUNT DECIMAL(10,2) NOT NULL
+);
+```
 
-Database Structure:
+#### `ORDER_DETAILS` Table
+```sql
+CREATE TABLE ORDER_DETAILS (
+    ORDER_DETAIL_ID INT PRIMARY KEY,
+    ORDER_ID INT,
+    FOOD_ID INT,
+    QUANTITY INT NOT NULL,
+    PRICE DECIMAL(10,2),
+    FOREIGN KEY (ORDER_ID) REFERENCES ORDERS(ORDER_ID),
+    FOREIGN KEY (FOOD_ID) REFERENCES FOOD_ITEMS(FOOD_ID)
+);
+```
 
-Tables:
+## Getting Started
 
-CATEGORIES Table: To categorize different types of food items.
+### Prerequisites
+- Basic knowledge of SQL.
 
-CATEGORY_ID: Unique identifier for each category.
-CATEGORY_NAME: The name of the category, used to identify it.
-DESCRIPTION: Description of the food item.
+### Running the Project
+- Once the schema is built, execute SQL queries to explore food items and recipes directly in SQL Fiddle or your preferred SQL client.
 
-FOOD_ITEMS Table: Stores details about the food items available for ordering.
+## Usage Instructions
 
-FOOD_ID: Unique identifier for each food item.
-FOOD_NAME: Name of the food item.
-DESCRIPTION: Description of the food item.
-PRICE: Price of the food item.
-CATEGORY_ID: Unique identifier for each category.
+### Accessing the Database
+- **Using SQL Fiddle:** Paste the SQL schema in SQL Fiddle and execute queries.
+- **Using SQL Client:** Connect to the database on your local SQL server and run queries.
 
-CUSTOMERS Table: To track customer information.
+### Common SQL Operations
 
-CUSTOMER_ID: A unique identifier for each customer, serving as the primary key in the CUSTOMERS table.
-NAME: The name of the customer, used to identify them in the CUSTOMERS table.
-EMAIL: The email address of the customer, used for communication and as a unique identifier for account-related purposes.
-PHONE: The phone number of the customer, used for contact purposes.
-
-ORDERS Table: Stores customer orders.
-
-ORDER_ID: Unique identifier for each order.
-CUSTOMER_NAME: Name of the customer placing the order.
-CUSTOMER_PHONE: Customer’s phone number.
-ORDER_DATE: Date the order was placed (default is the current date).
-TOTAL_AMOUNT: Total price of the order.
-
-ORDER_DETAILS Table: Stores the details of each order (i.e., the items ordered and their quantities).
-
-ORDER_DETAIL_ID: Unique identifier for each order detail.
-ORDER_ID: References the order from the ORDERS table.
-FOOD_ID: References the food item from the FOOD_ITEMS table.
-QUANTITY: Number of units of the food item ordered.
-PRICE: Price of the food item at the time of the order (can include discounts, etc.).
-
-Getting Started:
-
-Prerequisites:
-
-Basic knowledge of SQL.
-
-Running the Project:
-Once the schema is built, you can execute SQL queries to explore food items and recipes directly in SQL Fiddle.
-
-Example of Usage Instructions for FlavorQuest:
-
-Usage Instructions:
-
-Once you have set up FlavorQuest, you can start exploring food items and recipes. Here are some basic instructions on how to use the database:
-
-Accessing the Database:
-
-Using SQL Fiddle: After building the schema in SQL Fiddle, you can directly execute SQL queries in the provided query editor.
-
-Using SQL Client: If you have set up the project locally on your SQL server, connect to the database using your preferred SQL client (e.g., MySQL Workbench, pgAdmin).
-
-Common Operations:
-
-Viewing All Food Items:
-
+#### View All Food Items
+```sql
 SELECT * FROM FOOD_ITEMS;
+```
 
-Adding a New Food Item:
-
-INSERT INTO FOOD_ITEMS (FOOD_NAME, CATEGORY_ID, PRICE, DESCRIPTION)
+#### Add a New Food Item
+```sql
+INSERT INTO FOOD_ITEMS (FOOD_NAME, CATEGORY_ID, PRICE, DESCRIPTION) 
 VALUES ('New Dish', 1, 15.99, 'A delightful new dish.');
+```
 
-Updating an Existing Food Item:
+#### Update an Existing Food Item
+```sql
+UPDATE FOOD_ITEMS 
+SET PRICE = 12.99, DESCRIPTION = 'Updated description of the food item.' 
+WHERE FOOD_ID = 1;
+```
 
-UPDATE FOOD_ITEMS
-SET PRICE = 12.99, 
-DESCRIPTION = 'Updated description of the food item.'
-WHERE FOOD_ID = 1;  -- Replace 1 with the actual FOOD_ID
+#### Delete a Food Item
+```sql
+DELETE FROM FOOD_ITEMS WHERE FOOD_ID = 1;
+```
 
-Deleting a Food Item:
-
-DELETE FROM FOOD_ITEMS
-WHERE FOOD_ID = 1;  -- Replace 1 with the actual FOOD_ID
-
-Exploring Customer Preferences:
-
-You can also manage customer data:
-
-To view all customers:
-
+#### View All Customers
+```sql
 SELECT * FROM CUSTOMERS;
+```
 
-To add a new customer:
-
-INSERT INTO CUSTOMERS (CUSTOMER_ID, NAME, EMAIL, PHONE)
+#### Add a New Customer
+```sql
+INSERT INTO CUSTOMERS (CUSTOMER_ID, NAME, EMAIL, PHONE) 
 VALUES (1, 'John Doe', 'john.doe@example.com', '123-456-7890');
+```
 
-Contributing:
+## Contributing
 
-We welcome contributions to FlavorQuest! Here’s how you can help:
-
-How to Contribute:
-
-Fork the Repository: Click the "Fork" button at the top right corner of the repository page to create your own copy of the project.
-
-Clone Your Fork: 
-
-Clone your forked repository to your local machine using:
-
-bash
+### How to Contribute
+1. **Fork the Repository** - Click the "Fork" button on GitHub to create your own copy.
+2. **Clone Your Fork**
+```bash
 git clone https://github.com/yourusername/flavorquest.git
-
-Create a Branch: Create a new branch for your feature or bug fix:
-
-bash
+```
+3. **Create a Branch**
+```bash
 git checkout -b my-feature-branch
-
-Make Changes: Implement your feature or fix the bug. Ensure to follow the project's coding standards and conventions.
-
-Commit Your Changes: Commit your changes with a clear and descriptive message:
-
-bash
+```
+4. **Make Changes** - Implement your feature or fix a bug following coding standards.
+5. **Commit Changes**
+```bash
 git commit -m "Add a new feature or fix a bug"
-
-Push to Your Fork: Push your changes to your forked repository:
-bash
+```
+6. **Push Changes**
+```bash
 git push origin my-feature-branch
+```
+7. **Open a Pull Request** - Submit your changes for review.
 
-Open a Pull Request: Go to the original repository and click on the "Pull Requests" tab. Click "New Pull Request," select your branch, and provide a clear description of your changes before submitting the pull request.
+### Code of Conduct
+- Follow the project's guidelines to maintain a welcoming environment.
 
-Code of Conduct:
+### Issues
+- Report bugs or request features by opening an issue on GitHub.
 
-Please adhere to the Code of Conduct when contributing. We strive to create a welcoming environment for all contributors.
+## Running the SQL Script
+- Copy the SQL code from `FlavorQuest.sql`.
+- Open SQL Fiddle and select Oracle SQL.
+- Paste the SQL code and click **Build Schema**.
 
-Issues:
+## Sample Queries
 
-If you find a bug or have a feature request, please open an issue in the repository. Provide as much detail as possible to help us understand the problem.
-
-Thank you for considering contributing to FlavorQuest! Your help is greatly appreciated.
-
-How to Run:
-
-Copy the SQL code in 'FlavorQuest.sql'.
-Go to SQL Fiddle and select your database.
-Paste the SQL code in the left pane and run the script to create the database.
-
-Sample Queries:
-
-Retrieve all food items:
-
+### Retrieve All Food Items
+```sql
 SELECT * FROM FOOD_ITEMS;
+```
 
-Delete food items:
+### Delete a Food Item
+```sql
+DELETE FROM FOOD_ITEMS WHERE FOOD_ID = 1;
+```
 
-DELETE FROM FOOD_ITEMS WHERE FOOD_ID = 1;  -- Replace 1 with the actual FOOD_ID of the item you want to delete
+## Contact Information
+- **Name:** Godavarthi Jyothi  
+- **Email:** [jyothigodavarthi1@gmail.com](mailto:jyothigodavarthi1@gmail.com)  
+- **GitHub:** [Jyothigodavarthi](https://github.com/Jyothigodavarthi)  
+- **LinkedIn:** [Jyothi Godavarthi](https://linkedin.com/in/godavarthi-jyothi9)
 
-Contact Information:
+## SQL Fiddle Link
+- Use [this SQL Fiddle link](https://sqlfiddle.com/oracle/online-compiler?id=7628d942-2657-4689-9d10-298ad6c88ae7) to run SQL scripts online.
 
-For any inquiries or feedback regarding the FlavorQuest project, please feel free to reach out:
-
-Name: Godavarthi Jyothi
-
-Email: jyothigodavarthi1@gmail.com
-
-GitHub: https://github.com/Jyothigodavarthi
-
-LinkedIn: https://linkedin.com/in/godavarthi-jyothi9
-
-I welcome contributions, suggestions, and any discussions about the project!
-
-SQL FIDDLE Link:
-
-Using SQL Fiddle:
-
-You can run the SQL scripts directly on SQL Fiddle without needing to set up a local environment.
-
-Click here to access SQL Fiddle
-
-https://sqlfiddle.com/oracle/online-compiler?id=7628d942-2657-4689-9d10-298ad6c88ae7
-
-Navigate to the SQL Fiddle link above.
-
-Copy and paste the SQL scripts from the FlavorQuest.sql file into the SQL Fiddle editor.
-
-Click the "Build Schema" button to create the necessary tables and insert sample data.
-
-Conclusion:
-
-FlavorQuest aims to enhance the culinary experience by providing a robust platform for managing and exploring food recipes and preferences. We believe in the power of community contributions to make this project even better. Whether you're a chef, a food enthusiast, or someone looking to try new recipes, FlavorQuest is here to serve your culinary journey. We appreciate your interest and support!
-
+## Conclusion
+FlavorQuest enhances the culinary experience by providing a robust platform for managing and exploring food recipes and preferences. Contributions are welcome to improve the project further. Whether you're a chef, a food enthusiast, or someone looking to try new recipes, FlavorQuest is here for your culinary journey. Thanks for your interest and support!
